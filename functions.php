@@ -1,51 +1,24 @@
-<?php 
+<?php
 
 /**
- * This functions update the jobs post meta for the count of views
- * 
- * @param [type] $job_id
- * @return void
- */
-function zvezdelina_update_job_views_count ( $job_id ) {
-    if (empty($job_id)) {
-       return;
-    }
-
-    if ( !is_single('job') ) {
-       return;
-    }
-
-    //var_dump( $view_count); die();
-
-    $view_count = get_post_meta($job_id, 'views_count', true );
-    if ( ! empty ($view_count)) {
-       $view_count = $view_count + 1;
-    } else{
-        $view_count = 1;
-    }
-    update_post_meta($job_id, 'views_count', $view_count );
-
-}
-
-/**
- * Displays the current user name when the user is logged in
+ * This function take care of handling the assets with enqueue
  * 
  * @return void
  */
-function zvezdelina_display_username() {
-   if( is_user_logged_in() == true ) {
-      var_dump( 'Yes, we are logged in') ;
-   } else {
-      var_dump('no,we are not');
-   }
+
+ function zvezdelina_assets() {
+      wp_enqueue_style( 'zvezdelina-jobs', get_stylesheet_directory_uri(). '/assets/css/master.css', array(),filemtime (  get_template_directory() . '/assets/css/master.css' ) );
 }
+add_action( 'wp_enqueue_scripts','zvezdelina_assets');
 
-function zvezdelina_register_nav_menu(){
-   register_nav_menus(array(
-      'primary_menu' => __( 'Primary Menu Name', 'zvezdelina'),
-      'footer_menu'  => __('Footer Menu','zvezdelina'),
-   ));
+/**
+ * This function add a custom class
+ * 
+ * @return void
+ */
+function zvezdelina_body_class( $classes ){
+    $classes []= 'test class';
+
+    return $classes;
 }
-add_action('after_setup_theme','zvezdelina_register_nav_menu', 0 );
-
-
+add_filter('body_class','zvezdelina_body_class'); 
